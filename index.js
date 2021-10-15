@@ -3,7 +3,9 @@ showCards();
 let myBtn = document.getElementById("myBtn");
 myBtn.addEventListener('click', function (e){
     let notes = localStorage.getItem("notes");
+    let title = localStorage.getItem("title");
     let myTxt = document.getElementById("myTxt");
+    let myTitle = document.getElementById("myTitle");
 
     if(notes == null){
         notesObj = [];
@@ -13,13 +15,30 @@ myBtn.addEventListener('click', function (e){
         }
     }
     else{
-        notesObj = JSON.parse(localStorage.getItem("notes"));
+        notesObj = JSON.parse(notes);
         if(myTxt.value != ""){
             notesObj.push(myTxt.value);
             localStorage.setItem("notes", JSON.stringify(notesObj));
         }
     }
+    if(title == null){
+        titleObj = [];
+        if(myTitle.value == ""){
+            titleObj.push("Note");
+            localStorage.setItem("title",JSON.stringify(titleObj));
+        }
+    }
+    else{
+        titleObj = JSON.parse(title);
+        if(myTitle.value == ""){
+            titleObj.push("Note");
+            localStorage.setItem("title",JSON.stringify(titleObj));
+        }
+    }
+    titleObj.push(myTitle.value);
+    localStorage.setItem("title",JSON.stringify(titleObj));
     myTxt.value = "";
+    myTitle.value = "";
     showCards();
 });
 
@@ -33,12 +52,20 @@ function showCards(){
     else{
         notesObj = JSON.parse(notes);
     }
+    let title = localStorage.getItem("title");
+    if(title == null){
+        titleObj = [];
+    }
+    else{
+        titleObj = JSON.parse(title);
+    }
 
+    // notes
     let html = "";
    notesObj.forEach(function (e,index){
         html += `<div class="card mx-4 my-3 noteCard" style="width: 18rem; background-image: url('back8.jpeg');">
         <div class="card-body">
-            <h5 class="card-title">Note ${index + 1}</h5>
+            <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
         </div>
