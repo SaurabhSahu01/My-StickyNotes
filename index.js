@@ -65,6 +65,7 @@ function showCards(){
    notesObj.forEach(function (e,index){
         html += `<div class="card mx-4 my-3 noteCard" style="width: 18rem; background-image: url('back8.jpeg');">
         <div class="card-body">
+            <img src="bulboff.gif" style="height:25px; float: right;" id="${index+1000}" onclick="bookmark(this.id);" >
             <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
@@ -84,6 +85,7 @@ function showCards(){
 
 function deleteButton(index){
     let notes = localStorage.getItem("notes");
+    let title = localStorage.getItem("title");
 
     if(notes == null){
         notesObj = [];
@@ -97,6 +99,15 @@ function deleteButton(index){
     if(notesObj.length == 0){
         location.reload();
     }
+
+    if(title == null){  // title was not getting updated in the previous code
+        titleObj = [];
+    }
+    else{
+        titleObj = JSON.parse(title);
+    }
+    titleObj.splice(index,1);
+    localStorage.setItem("title",JSON.stringify(titleObj));
     showCards();
 }
 
@@ -105,7 +116,6 @@ let search = document.getElementById('searchTxt');
 search.addEventListener("input", function(){
 
     let inputVal = search.value.toLowerCase();
-    // console.log('Input event fired!', inputVal);
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach(function(element){
         let cardTxt = element.getElementsByTagName("p")[0].innerText;
@@ -116,6 +126,11 @@ search.addEventListener("input", function(){
         else{
             element.style.display = "none";
         }
-        // console.log(cardTxt);
     })
 })
+
+// bookmark function : to remeber the bookmark we have to store the values in the local storage 
+function bookmark(index){
+    let icon = document.getElementById(index);
+    icon.src = "bulbon.gif";
+}
