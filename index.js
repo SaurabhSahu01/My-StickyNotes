@@ -65,7 +65,7 @@ function showCards(){
    notesObj.forEach(function (e,index){
         html += `<div class="card mx-4 my-3 noteCard" style="width: 18rem; background-image: url('back8.jpeg');">
         <div class="card-body">
-            <img src="bulboff.gif" style="height:25px; float: right;" id="${index+1000}" onclick="bookmark(this.id);" >
+            <img  src = "bulboff.gif" style="height:25px; float: right;" id="pic${index}" onclick="bookmark(this.id);" >
             <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
@@ -132,5 +132,10 @@ search.addEventListener("input", function(){
 // bookmark function : to remeber the bookmark we have to store the values in the local storage 
 function bookmark(index){
     let icon = document.getElementById(index);
-    icon.src = "bulbon.gif";
+    if(icon.src.includes('off')){
+        icon.src = "bulbon.gif";
+    }
+    else if(icon.src.includes('on')){
+        icon.src = "bulboff.gif";
+    }
 }
