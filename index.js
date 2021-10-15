@@ -109,7 +109,7 @@ search.addEventListener("input", function(){
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach(function(element){
         let cardTxt = element.getElementsByTagName("p")[0].innerText;
-        let text = cardTxt.toLowerCase();  // removed bug of not searching the first word
+        let text = cardTxt.toLowerCase();  // resolved bug of not searching the first word
         if(text.includes(inputVal)){
             element.style.display = "block";
         }
