@@ -31,7 +31,7 @@ function showCards(){
         notesObj = [];
     }
     else{
-        notesObj = JSON.parse(localStorage.getItem('notes'));
+        notesObj = JSON.parse(notes);
     }
 
     let html = "";
@@ -44,14 +44,13 @@ function showCards(){
         </div>
     </div>`;
     let notesElm = document.getElementById("notes");
-    if(notesObj.length != 0){
-        notesElm.innerHTML = html;
+    if(notesObj.length == 0){
+        notesElm.innerHTML = `<h5>Please add some notes!</h5>`;
     }
     else{
-        notesElm.innerHTML = `Please add some notes!`;
+        notesElm.innerHTML = html;
     }
     });
-
 }
 
 // "Delete" button function 
@@ -83,7 +82,8 @@ search.addEventListener("input", function(){
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach(function(element){
         let cardTxt = element.getElementsByTagName("p")[0].innerText;
-        if(cardTxt.includes(inputVal)){
+        let text = cardTxt.toLowerCase();  // removed bug of not searching the first word
+        if(text.includes(inputVal)){
             element.style.display = "block";
         }
         else{
