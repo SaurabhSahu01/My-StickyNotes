@@ -1,5 +1,4 @@
 // adding function - "Add Note" button and storing data in localStorage 
-localStorage.clear();
 showCards();
 let myBtn = document.getElementById("myBtn");
 myBtn.addEventListener('click', function (e){
