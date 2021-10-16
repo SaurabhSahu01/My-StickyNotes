@@ -1,109 +1,109 @@
 // adding function - "Add Note" button and storing data in localStorage 
 showCards();
 let myBtn = document.getElementById("myBtn");
-myBtn.addEventListener('click', function (e){
+myBtn.addEventListener('click', function (e) {
     let notes = localStorage.getItem("notes");
     let title = localStorage.getItem("title");
     let myTxt = document.getElementById("myTxt");
     let myTitle = document.getElementById("myTitle");
 
-    if(notes == null){
+    if (notes == null) {
         notesObj = [];
-        if(myTxt.value != ""){
+        if (myTxt.value != "") {
             notesObj.push(myTxt.value);
             localStorage.setItem("notes", JSON.stringify(notesObj));
         }
     }
-    else{
+    else {
         notesObj = JSON.parse(notes);
-        if(myTxt.value != ""){
+        if (myTxt.value != "") {
             notesObj.push(myTxt.value);
             localStorage.setItem("notes", JSON.stringify(notesObj));
         }
     }
-    if(title == null){
+    if (title == null) {
         titleObj = [];
-        if(myTitle.value == ""){
+        if (myTitle.value == "") {
             titleObj.push("Note");
         }
-        else{
+        else {
             titleObj.push(myTitle.value);
         }
     }
-    else{
+    else {
         titleObj = JSON.parse(title);
-        if(myTitle.value == ""){
+        if (myTitle.value == "") {
             titleObj.push("Note");
         }
-        else{
+        else {
             titleObj.push(myTitle.value);
         }
     }
-    localStorage.setItem("title",JSON.stringify(titleObj));
+    localStorage.setItem("title", JSON.stringify(titleObj));
     myTxt.value = "";
     myTitle.value = "";
     let icon = localStorage.getItem("icon");
-    if(icon == null){
+    if (icon == null) {
         iconObj = [];
     }
-    else{
+    else {
         iconObj = JSON.parse(icon);
     }
     iconObj.push("off");
-    localStorage.setItem("icon",JSON.stringify(iconObj));
+    localStorage.setItem("icon", JSON.stringify(iconObj));
     showCards();
 });
 
 // function to add cards when user will press the add button 
 
-function showCards(){
+function showCards() {
     let notes = localStorage.getItem("notes");
-    if(notes == null){
+    if (notes == null) {
         notesObj = [];
     }
-    else{
+    else {
         notesObj = JSON.parse(notes);
     }
     let title = localStorage.getItem("title");
-    if(title == null){
+    if (title == null) {
         titleObj = [];
     }
-    else{
+    else {
         titleObj = JSON.parse(title);
     }
 
     // notes
     let html = "";
-   notesObj.forEach(function (e,index){
+    notesObj.forEach(function (e, index) {
         html += `<div class="card mx-4 my-3 noteCard" style="width: 18rem; background-image: url('back8.jpeg');">
         <div class="card-body">
-            <img  src = "bulboff.gif" style="height:25px; float: right;" id="${index+1000}" class="imgClass" onclick="bookmark(this.id);" >
+            <img  src = "bulboff.gif" style="height:25px; float: right;" id="${index + 1000}" class="imgClass" onclick="bookmark(this.id);" >
             <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
         </div>
     </div>`;
-    let notesElm = document.getElementById("notes");
-    if(notesObj.length == 0){
-        notesElm.innerHTML = `<h5>Please add some notes!</h5>`;
-    }
-    else{
-        notesElm.innerHTML = html;
-    }
-    });  
+        let notesElm = document.getElementById("notes");
+        if (notesObj.length == 0) {
+            notesElm.innerHTML = `<h5>Please add some notes!</h5>`;
+        }
+        else {
+            notesElm.innerHTML = html;
+        }
+    });
     let icon = localStorage.getItem("icon");
-    if(icon == null){
+    if (icon == null) {
         iconObj = [];
     }
-    else{
+    else {
         iconObj = JSON.parse(icon);
     }
-    iconObj.forEach(function (e,index){
-        let iconElem = document.getElementById(`${index+1000}`);
-        if(e == "on"){
+    iconObj.forEach(function (e, index) {
+        let iconElem = document.getElementById(`${index + 1000}`);
+        if (e == "on") {
             iconElem.src = "bulbon.gif";
         }
-        else{
+        else {
             iconElem.src = "bulboff.gif";
         }
     });
@@ -111,79 +111,83 @@ function showCards(){
 
 // "Delete" button function 
 
-function deleteButton(index){
+function deleteButton(index) {
     let notes = localStorage.getItem("notes");
     let title = localStorage.getItem("title");
 
-    if(notes == null){
+    if (notes == null) {
         notesObj = [];
     }
-    else{
+    else {
         notesObj = JSON.parse(notes);
     }
 
     notesObj.splice(index, 1);
     localStorage.setItem("notes", JSON.stringify(notesObj));
-    if(notesObj.length == 0){
+    if (notesObj.length == 0) {
         location.reload();
     }
 
-    if(title == null){  // title was not getting updated in the previous code
+    if (title == null) {  // title was not getting updated in the previous code
         titleObj = [];
     }
-    else{
+    else {
         titleObj = JSON.parse(title);
     }
-    titleObj.splice(index,1);
-    localStorage.setItem("title",JSON.stringify(titleObj));
+    titleObj.splice(index, 1);
+    localStorage.setItem("title", JSON.stringify(titleObj));
     let icon = localStorage.getItem("icon");
-    if(icon == null){
+    if (icon == null) {
         iconObj = [];
     }
-    else{
+    else {
         iconObj = JSON.parse(icon);
     }
-    iconObj.splice(index,1);
-    localStorage.setItem("icon",JSON.stringify(iconObj));
+    iconObj.splice(index, 1);
+    localStorage.setItem("icon", JSON.stringify(iconObj));
     showCards();
 }
 
 // adding search option 
 let search = document.getElementById('searchTxt');
-search.addEventListener("input", function(){
+search.addEventListener("input", function () {
 
     let inputVal = search.value.toLowerCase();
     let noteCards = document.getElementsByClassName('noteCard');
-    Array.from(noteCards).forEach(function(element){
+    Array.from(noteCards).forEach(function (element) {
+
         let cardTxt = element.getElementsByTagName("p")[0].innerText;
-        let text = cardTxt.toLowerCase();  // resolved bug of not searching the first word
-        if(text.includes(inputVal)){
+        let titleTxt = element.getElementsByTagName("h5")[0].innerText;
+
+        let text1 = cardTxt.toLowerCase();  // resolved bug of not searching the first word
+        let text2 = text1 + " " + titleTxt.toLowerCase(); // now title can also be searched
+
+        if (text2.includes(inputVal)) {
             element.style.display = "block";
         }
-        else{
+        else {
             element.style.display = "none";
         }
     })
 })
-
 // bookmark function 
 
-function bookmark(index){
+function bookmark(index) {
     let icon = localStorage.getItem("icon");
     let iconElem = document.getElementById(index);
 
-    if(icon == null){
+    if (icon == null) {
         iconObj = [];
     }
-    else{
+    else {
         iconObj = JSON.parse(icon);
     }
-    if(iconElem.src.includes('on')){
-        iconObj[`${index-1000}`] = "off";
+    if (iconElem.src.includes('on')) {
+        iconObj[`${index - 1000}`] = "off";
     }
-    else{
-        iconObj[`${index-1000}`] = "on";
+    else {
+        iconObj[`${index - 1000}`] = "on";
     }
-    localStorage.setItem("icon",JSON.stringify(iconObj));
+    localStorage.setItem("icon", JSON.stringify(iconObj));
     showCards();
 }
