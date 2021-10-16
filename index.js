@@ -25,20 +25,32 @@ myBtn.addEventListener('click', function (e){
         titleObj = [];
         if(myTitle.value == ""){
             titleObj.push("Note");
-            localStorage.setItem("title",JSON.stringify(titleObj));
+        }
+        else{
+            titleObj.push(myTitle.value);
         }
     }
     else{
         titleObj = JSON.parse(title);
         if(myTitle.value == ""){
             titleObj.push("Note");
-            localStorage.setItem("title",JSON.stringify(titleObj));
+        }
+        else{
+            titleObj.push(myTitle.value);
         }
     }
-    titleObj.push(myTitle.value);
     localStorage.setItem("title",JSON.stringify(titleObj));
     myTxt.value = "";
     myTitle.value = "";
+    let icon = localStorage.getItem("icon");
+    if(icon == null){
+        iconObj = [];
+    }
+    else{
+        iconObj = JSON.parse(icon);
+    }
+    iconObj.push("off");
+    localStorage.setItem("icon",JSON.stringify(iconObj));
     showCards();
 });
 
@@ -65,7 +77,7 @@ function showCards(){
    notesObj.forEach(function (e,index){
         html += `<div class="card mx-4 my-3 noteCard" style="width: 18rem; background-image: url('back8.jpeg');">
         <div class="card-body">
-            <img  src = "bulboff.gif" style="height:25px; float: right;" id="pic${index}" onclick="bookmark(this.id);" >
+            <img  src = "bulboff.gif" style="height:25px; float: right;" id="${index+1000}" class="imgClass" onclick="bookmark(this.id);" >
             <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
@@ -78,6 +90,22 @@ function showCards(){
     else{
         notesElm.innerHTML = html;
     }
+    });  
+    let icon = localStorage.getItem("icon");
+    if(icon == null){
+        iconObj = [];
+    }
+    else{
+        iconObj = JSON.parse(icon);
+    }
+    iconObj.forEach(function (e,index){
+        let iconElem = document.getElementById(`${index+1000}`);
+        if(e == "on"){
+            iconElem.src = "bulbon.gif";
+        }
+        else{
+            iconElem.src = "bulboff.gif";
+        }
     });
 }
 
@@ -108,6 +136,15 @@ function deleteButton(index){
     }
     titleObj.splice(index,1);
     localStorage.setItem("title",JSON.stringify(titleObj));
+    let icon = localStorage.getItem("icon");
+    if(icon == null){
+        iconObj = [];
+    }
+    else{
+        iconObj = JSON.parse(icon);
+    }
+    iconObj.splice(index,1);
+    localStorage.setItem("icon",JSON.stringify(iconObj));
     showCards();
 }
 
@@ -129,13 +166,24 @@ search.addEventListener("input", function(){
     })
 })
 
-// bookmark function : to remeber the bookmark we have to store the values in the local storage 
+// bookmark function 
+
 function bookmark(index){
-    let icon = document.getElementById(index);
-    if(icon.src.includes('off')){
-        icon.src = "bulbon.gif";
+    let icon = localStorage.getItem("icon");
+    let iconElem = document.getElementById(index);
+
+    if(icon == null){
+        iconObj = [];
     }
-    else if(icon.src.includes('on')){
-        icon.src = "bulboff.gif";
+    else{
+        iconObj = JSON.parse(icon);
     }
+    if(iconElem.src.includes('on')){
+        iconObj[`${index-1000}`] = "off";
+    }
+    else{
+        iconObj[`${index-1000}`] = "on";
+    }
+    localStorage.setItem("icon",JSON.stringify(iconObj));
+    showCards();
 }
