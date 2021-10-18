@@ -48,9 +48,10 @@ myBtn.addEventListener('click', function (e) {
     localStorage.setItem("icon", JSON.stringify(iconObj));
     let date = localStorage.getItem("date");
     let today = new Date();
-    let time = today.toLocaleTimeString().slice(0,5);
+    let hour = ("0" + today.getHours()).slice(-2);
+    let minute = ("0" + today.getMinutes()).slice(-2);
     let localDate = today.toLocaleDateString();
-    let cardTime =  `${time}, ${localDate}`;
+    let cardTime =  `${hour}:${minute}, ${localDate}`;
     if(date == null){
         dateObj = [];
     }
@@ -93,7 +94,7 @@ function showCards() {
             <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
-            <h6 style="float:right; color: rgba(0,100,0,0.6);"></h6>
+            <h6 style="float:right; color: rgba(0,100,0,0.5);"></h6>
         </div>
     </div>`;
         let notesElm = document.getElementById("notes");
@@ -117,7 +118,9 @@ function showCards() {
             iconElem.src = "bulbon.gif";
         }
         else {
-            iconElem.src = "bulboff.gif";
+            if(iconElem != null){
+                iconElem.src = "bulboff.gif";
+            }   
         }
     });
     let date = localStorage.getItem("date");
