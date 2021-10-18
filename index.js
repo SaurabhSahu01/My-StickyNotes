@@ -21,27 +21,20 @@ myBtn.addEventListener('click', function (e) {
             localStorage.setItem("notes", JSON.stringify(notesObj));
         }
     }
-    if (title == null) {
+    if(title == null){
         titleObj = [];
-        if (myTitle.value == "") {
-            titleObj.push("Note");
-        }
-        else {
-            titleObj.push(myTitle.value);
-        }
     }
-    else {
+    else{
         titleObj = JSON.parse(title);
-        if (myTitle.value == "") {
-            titleObj.push("Note");
-        }
-        else {
-            titleObj.push(myTitle.value);
-        }
+    }
+    if((myTxt.value != "") && (myTitle.value == "")){
+        titleObj.push("Note");
+    }
+    else if((myTxt.value != "") && (myTitle.value != "")){
+        titleObj.push(myTitle.value);
     }
     localStorage.setItem("title", JSON.stringify(titleObj));
-    myTxt.value = "";
-    myTitle.value = "";
+    
     let icon = localStorage.getItem("icon");
     if (icon == null) {
         iconObj = [];
@@ -49,8 +42,27 @@ myBtn.addEventListener('click', function (e) {
     else {
         iconObj = JSON.parse(icon);
     }
-    iconObj.push("off");
+    if(myTxt.value != ""){
+        iconObj.push("off");
+    }
     localStorage.setItem("icon", JSON.stringify(iconObj));
+    let date = localStorage.getItem("date");
+    let today = new Date();
+    let time = today.toLocaleTimeString().slice(0,5);
+    let localDate = today.toLocaleDateString();
+    let cardTime =  `${time}, ${localDate}`;
+    if(date == null){
+        dateObj = [];
+    }
+    else{
+        dateObj = JSON.parse(date);
+    }
+    if(myTxt.value != ""){
+        dateObj.push(cardTime);
+    }
+    localStorage.setItem("date",JSON.stringify(dateObj));
+    myTxt.value = "";
+    myTitle.value = "";
     showCards();
 });
 
@@ -81,6 +93,7 @@ function showCards() {
             <h5 class="card-title" id="cardTitle">${titleObj[index]}</h5>
             <p class="card-text">${e}</p>
             <a class="btn btn-primary" id="${index}" onclick="deleteButton(this.id);">Delete</a>
+            <h6 style="float:right; color: rgba(0,100,0,0.6);"></h6>
         </div>
     </div>`;
         let notesElm = document.getElementById("notes");
@@ -107,6 +120,17 @@ function showCards() {
             iconElem.src = "bulboff.gif";
         }
     });
+    let date = localStorage.getItem("date");
+    if(date == null){
+        dateObj = [];
+    }
+    else{
+        dateObj = JSON.parse(date);
+    }
+    dateObj.forEach(function (e,index){
+        let dateElem = document.getElementsByTagName("h6");
+        dateElem[index].innerHTML = dateObj[index];
+    })
 }
 
 // "Delete" button function 
@@ -145,6 +169,15 @@ function deleteButton(index) {
     }
     iconObj.splice(index, 1);
     localStorage.setItem("icon", JSON.stringify(iconObj));
+    let date = localStorage.getItem("date");
+    if(date == null){
+        dateObj = [];
+    }
+    else{
+        dateObj = JSON.parse(date);
+    }
+    dateObj.splice(index,1);
+    localStorage.setItem("date",JSON.stringify(dateObj));
     showCards();
 }
 
@@ -158,9 +191,10 @@ search.addEventListener("input", function () {
 
         let cardTxt = element.getElementsByTagName("p")[0].innerText;
         let titleTxt = element.getElementsByTagName("h5")[0].innerText;
+        let dateTxt = element.getElementsByTagName("h6")[0].innerText;
 
         let text1 = cardTxt.toLowerCase();  // resolved bug of not searching the first word
-        let text2 = text1 + " " + titleTxt.toLowerCase(); // now title can also be searched
+        let text2 = text1 + " " + titleTxt.toLowerCase() + " " + dateTxt; // now title and dates can also be searched
 
         if (text2.includes(inputVal)) {
             element.style.display = "block";
